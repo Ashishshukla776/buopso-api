@@ -1,25 +1,27 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+import {requestBody} from '../helper/request'
+let apiUrl = Cypress.env("apiUrl")
+
+Cypress.Commands.add('login', () => {
+    return cy.request({
+        method: "POST",
+        url: `${apiUrl}/auth/v1/login`,
+        body: requestBody({})
+    }).then(({ body }) => {
+       let token = "Bearer " + body.result.token;
+       Cypress.env("token",token)
+    })
+})
+
+Cypress.Commands.add('pipelineData', () => {
+    cy.request({
+        method: "GET",
+        url: `${apiUrl}/fams/v2/pipelines`,
+        headers: { Authorization: "Bearer Auth" },
+        qs: {moduel:"one",asset:"lead"}
+    }).then(({ body }) => {
+       let pipeline_id = body.result.values.map(element => element.id);
+       Cypress.env("pipeline_id",pipeline_id[0])
+       let pipeline_name = body.result.values.map(element => element.label);
+       Cypress.env("pipelineName",pipeline_name[0])
+    })
+})

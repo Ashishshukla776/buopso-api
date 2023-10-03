@@ -6,13 +6,14 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
-    baseUrl : process.env.BASE_URL,
+    baseUrl: process.env.BASE_URL,
     env: {
-      apiUrl : process.env.BASE_URL,
-      module_name:process.env.MODULE_NAME,
-      asset_name:process.env.ASSET_NAME
-
+      apiUrl: process.env.BASE_URL,
+      module_name: process.env.MODULE_NAME,
+      asset_name: process.env.ASSET_NAME,
+      userId: process.env.USERID,
+      password: process.env.PASSWORD,
     },
-    specPattern : "cypress/buopso"
+    specPattern: "cypress/buopso"
   },
 });
