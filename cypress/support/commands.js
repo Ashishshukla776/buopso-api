@@ -1,12 +1,14 @@
 import {requestBody} from '../helper/request'
 let apiUrl = Cypress.env("apiUrl")
 
-Cypress.Commands.add('login', () => {
-    return cy.request({
+Cypress.Commands.add("loginX", () => {
+    cy.request({
         method: "POST",
-        url: `${apiUrl}/auth/v1/login`,
+        url: `${apiUrl}/auth/login`,
         body: requestBody({})
-    }).then(({ body }) => {
+    }).then(({ body, headers }) => {
+        let set_cookie = Object.values(headers)
+        Cypress.env("set_cookie",set_cookie[8])
        let token = "Bearer " + body.result.token;
        Cypress.env("token",token)
     })

@@ -1,16 +1,17 @@
-import requestBody from '../../helper/request'
+import {requestBody} from '../../helper/request'
 
 describe(`Test case for ${Cypress.spec["fileName"]}`, () => {
     let apiUrl = Cypress.env("apiUrl")
     const request = (bodyData) => {
         return cy.request({
             method: "POST",
-            url: `${apiUrl}/auth/v1/login`,
+            url: `${apiUrl}/auth/login`,
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
             },
-            body: bodyData
+            body: bodyData,
+            failOnStatusCode: false
         });
     };
 
@@ -24,33 +25,41 @@ describe(`Test case for ${Cypress.spec["fileName"]}`, () => {
     //     return reqData
     // };
 
-    const successResponse = () => {
-        expect(body).has.property("success", true);
-        expect(body).has.property("message");
-        expect(body).has.property("result");
+    const successResponse = (successRes) => {
+        expect(successRes).has.property("success", true);
+        expect(successRes).has.property("message","Request successful.");
+        expect(successRes).has.property("result");
     };
 
-    const failureResponse = () => {
-        expect(body).has.property("success", false);
-        expect(body).has.property("message");
-        expect(body).has.property("result");
+    const failureResponse = (failRes) => {
+        expect(failRes).has.property("success", false);
+        expect(failRes).has.property("message");
+        expect(failRes).has.property("result");
     }
 
     context(`Success test case for ${Cypress.spec["fileName"]}`, () => {
         it(`Generate login token`, () => {
-            //  let reqBody = requestBody({})
-            // request(reqBody)
-            cy.login().then(({ body }) => {
-                cy.log(JSON.stringify(body));
-                successResponse();
+             let reqBody = requestBody({})
+            request(reqBody)
+            // cy.login()
+            .then(({body,status,headers}) => {
+                 let set_cookie = Object.values(headers)
+                // console.log("111Headers1111",body)
+                 cy.log(set_cookie[8]);
+                // console.log(headers.getSetCookie())
+                //   cy.log("------set_cookie------",set_cookie);
+                //   expect(headers).has.deep.property("x-powered-by",headers.get("x-powered-by"));
+                // expect(status,"Status").to.be.eq(200)
+                // successResponse(body);
             });
         });
 
         it.skip(`userId(email) should be case-insensitive`, () => {
-            let reqBody = requestBody({ userId: "" })
-            request(reqBody).then(({ body }) => {
+            let reqBody = requestBody({ userId: "ABHINAV.KHANDUJA@BUOPSO.COM" })
+            request(reqBody).then(({ body,status }) => {
                 cy.log(JSON.stringify(body));
-                successResponse();
+                expect(status,"Status").to.be.eq(200)
+                successResponse(body);
             });
         });
     });
@@ -58,9 +67,10 @@ describe(`Test case for ${Cypress.spec["fileName"]}`, () => {
     context.skip(`Failure test case for ${Cypress.spec["fileName"]}`, () => {
         it(`when not provide required field`, () => {
             let reqBody = {}
-            request(reqBody).then(({ body }) => {
+            request(reqBody).then(({ body, status }) => {
                 cy.log(JSON.stringify(body));
-                failureResponse();
+                expect(status,"Status").to.be.eq(400)
+                failureResponse(body);
             });
         });
 
@@ -68,9 +78,10 @@ describe(`Test case for ${Cypress.spec["fileName"]}`, () => {
             let reqBody = requestBody({
                 userId: "", password: "", device: "", force: ""
             });
-            request(reqBody).then(({ body }) => {
+            request(reqBody).then(({ body, status }) => {
                 cy.log(JSON.stringify(body));
-                failureResponse();
+                expect(status,"Status").to.be.eq(400)
+                failureResponse(body);
             });
         });
 
@@ -78,9 +89,10 @@ describe(`Test case for ${Cypress.spec["fileName"]}`, () => {
             let reqBody = requestBody({
                 userId: "abcxyz.com"
             });
-            request(reqBody).then(({ body }) => {
+            request(reqBody).then(({ body,status }) => {
                 cy.log(JSON.stringify(body));
-                failureResponse();
+                expect(status,"Status").to.be.eq(401)
+                failureResponse(body);
             });
         });
 
@@ -88,9 +100,10 @@ describe(`Test case for ${Cypress.spec["fileName"]}`, () => {
             let reqBody = requestBody({
                 userId: "asdf12345@gmail.com"
             });
-            request(reqBody).then(({ body }) => {
+            request(reqBody).then(({ body, status }) => {
                 cy.log(JSON.stringify(body));
-                failureResponse();
+                expect(status,"Status").to.be.eq(401)
+                failureResponse(body);
             });
         });
 
@@ -98,9 +111,10 @@ describe(`Test case for ${Cypress.spec["fileName"]}`, () => {
             let reqBody = requestBody({
                 password: "asdf12345gmailcom"
             });
-            request(reqBody).then(({ body }) => {
+            request(reqBody).then(({ body, status }) => {
                 cy.log(JSON.stringify(body));
-                failureResponse();
+                expect(status,"Status").to.be.eq(401)
+                failureResponse(body);
             });
         });
 
@@ -108,9 +122,21 @@ describe(`Test case for ${Cypress.spec["fileName"]}`, () => {
             let reqBody = requestBody({
                 userId: 123423423, password:21321334, device: 2321323, force: 33454
             });
-            request(reqBody).then(({ body }) => {
+            request(reqBody).then(({ body, status }) => {
                 cy.log(JSON.stringify(body));
-                failureResponse();
+                expect(status,"Status").to.be.eq(401)
+                failureResponse(body);
+            });
+        });
+
+        it(` device should be string`, () => {
+            let reqBody = requestBody({
+                device: 2321323, force: 33454
+            });
+            request(reqBody).then(({ body, status }) => {
+                cy.log(JSON.stringify(body));
+                expect(status,"Status").to.be.eq(400)
+                failureResponse(body);
             });
         });
 
@@ -118,9 +144,10 @@ describe(`Test case for ${Cypress.spec["fileName"]}`, () => {
             let reqBody = requestBody({
                  force: "33213"
             });
-            request(reqBody).then(({ body }) => {
+            request(reqBody).then(({ body, status }) => {
                 cy.log(JSON.stringify(body));
-                failureResponse();
+                expect(status,"Status").to.be.eq(400)
+                failureResponse(body);
             });
         });
     });

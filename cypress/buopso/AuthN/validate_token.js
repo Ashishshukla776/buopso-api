@@ -1,4 +1,7 @@
 describe(`Test case of ${Cypress.spec["fileName"]} and renew-token`, () => {
+    beforeEach(()=>{
+        cy.loginX()
+    })
     const request = (setUrl) => {
        return cy.request ({
             method: "GET",
@@ -6,13 +9,14 @@ describe(`Test case of ${Cypress.spec["fileName"]} and renew-token`, () => {
             headers: {
                 'Content-Type': 'application/json',
                 Accept: 'application/json',
+                Authorization: Cypress.env("set_cookie")
             }
         });
     };
 
-    const successResponse = () => {
-        expect(body).has.property("success", true).to.be.boolean;
-        expect(body).has.property("message").to.be.string;
+    const successResponse = (data) => {
+        expect(data).has.property("success", true);
+        expect(data).has.property("message").to.be.string;
         // expect(body).has.property("result").to.be.string;
     };
 
@@ -24,6 +28,7 @@ describe(`Test case of ${Cypress.spec["fileName"]} and renew-token`, () => {
 
     context(`Success test case of ${Cypress.spec["fileName"]} for reset password`, () => {
         it.skip(`test case for validate-token`, () => {
+           
             let reqUrl = "http://api.buopso.lcl/auth/v1/validate-token"
             request(reqUrl).then(({ body }) => {
                 cy.log(JSON.stringify(body));
@@ -32,10 +37,11 @@ describe(`Test case of ${Cypress.spec["fileName"]} and renew-token`, () => {
         });   
         
         it(`test case for renew-token`, () => {
-            let reqUrl = "http://api.buopso.lcl/auth/v1/renew-token"
+            cy.log("============set_cookie=======",Cypress.env("set_cookie"))
+            let reqUrl = "http://api.buopso.lcl/auth/renew"
             request(reqUrl).then(({ body }) => {
                 cy.log(JSON.stringify(body));
-                successResponse();
+                successResponse(body);
             });
         });
     });

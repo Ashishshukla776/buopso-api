@@ -5,8 +5,8 @@ describe(`Test case for create asset`, () => {
     let fieldId_1
     let fieldId_2
     const createAssetReq = (payload) => {
-        fieldId_1 =  simpleFaker.string.uuid()
-        fieldId_2 =  simpleFaker.string.uuid()
+        fieldId_1 =  faker.string.uuid()
+        fieldId_2 =  faker.string.uuid()
         let reqData = {
             fieldId_1 : payload.hasOwnProperty(fieldId_1) ? payload.fieldId_1 : faker.person.firstName(),
             fieldId_2 : payload.hasOwnProperty(fieldId_2) ? payload.fieldId_2 : faker.person.lastName(),
