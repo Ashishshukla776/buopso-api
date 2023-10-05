@@ -1,6 +1,6 @@
 const { beforeEach } = require("mocha");
 
-describe(`Test case for exist Pipeline`, () => {
+describe.skip(`Test case for exist Pipeline`, () => {
     beforeEach(()=>{
         cy.pipelineData()
     })

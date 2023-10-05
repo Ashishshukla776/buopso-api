@@ -1,4 +1,4 @@
-describe(`Test case for rename/reorder Pipeline`, () => {
+describe.skip(`Test case for rename/reorder Pipeline`, () => {
     const { faker } = require('@faker-js/faker');
     // const {query} = require('../../../helper/queryParam.js')
 

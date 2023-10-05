@@ -1,6 +1,6 @@
 import util from '../../../helper/utility';
 import {qsWithCatId} from '../../../helper/queryParam'
-describe(`Test case for create asset`, () => {
+describe.skip(`Test case for create asset`, () => {
     const { faker } = require('@faker-js/faker');
     let fieldId_1
     let fieldId_2

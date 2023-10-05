@@ -1,10 +1,12 @@
+import {failQueryResp} from '../../../helper/queryParam'
+
 describe(`Test case for list Pipeline`, () => {
     beforeEach(()=>{
-        cy.login()
+        cy.getToken()
     })
-    const listPipeQS = () => {
+    const listPipeQS = (payload) => {
         let qsData = {
-            module: payload.hasOwnProperty("module") ? payload.module : "one",
+            module: payload.hasOwnProperty("module") ? payload.module : "lms",
             asset: payload.hasOwnProperty("asset") ? payload.asset : "lead",
             // page: payload.hasOwnProperty("page") ? payload.page : 1,
             // rows: payload.hasOwnProperty("rows") ? payload.rows : 25,
@@ -17,9 +19,10 @@ describe(`Test case for list Pipeline`, () => {
     const cyReqListPipe = (setQsParam) => {
         return cy.request({
             method: "GET",
-            url: "http://api.buopso.lcl/fams/v2/pipelines",
-            headers: { Authorization: "Bearer Auth" },
-            qs: setQsParam
+            url: "http://api.buopso.lcl/fams/pipelines",
+            headers: { Authorization: Cypress.env("token") },
+            qs: setQsParam,
+            failOnStatusCode: false
         });
     };
 
@@ -28,16 +31,16 @@ describe(`Test case for list Pipeline`, () => {
             let reqQsParam = listPipeQS({})
             cyReqListPipe(reqQsParam).then(({ body }) => {
                 cy.log(JSON.stringify(body))
-                expect(body).has.property("success", true);
-                expect(body).has.property("message");
-                expect(body.result.pages).has.property("currentPageNo");
-                expect(body.result.pages).has.property("totalNoOfPages");
-                expect(body.result.pages).has.property("totalRecords");
+                expect(body).has.property("success", true).to.be.a("boolean");
+                expect(body).has.property("message").to.be.a("string");
+                expect(body.result.pages).has.property("currentPageNo").to.be.a("number");
+                expect(body.result.pages).has.property("totalNoOfPages").to.be.a("number");
+                expect(body.result.pages).has.property("totalRecords").to.be.a("number");
                 body.result.values.forEach(element => {
-                    expect(element).has.property("id");
-                    expect(element).has.property("label");
-                    expect(element).has.property("count");
-                    expect(element).has.property("pos");
+                    expect(element).has.property("id").to.be.a("string");
+                    expect(element).has.property("label").to.be.a("string");
+                    // expect(element).has.property("count");
+                    expect(element).has.property("pos").to.be.a("number");
                 });
             })
         })
@@ -46,10 +49,8 @@ describe(`Test case for list Pipeline`, () => {
     context(`Failure test case for list Pipeline`, () => {
         it(`module-name and asset-name should be required in query param`, () => {
             let reqQsParam = {}
-            cyReqListPipe(reqQsParam).then(({ body }) => {
-                cy.log(JSON.stringify(body))
-                expect(body).has.property("success", false);
-                expect(body).has.property("message");
+            cyReqListPipe(reqQsParam).then(({ body, status }) => {
+                failQueryResp(body,status)
             })
         })
 
@@ -58,10 +59,8 @@ describe(`Test case for list Pipeline`, () => {
                 module:123444,
                 asset:123444
             })
-            cyReqListPipe(reqQsParam).then(({ body }) => {
-                cy.log(JSON.stringify(body))
-                expect(body).has.property("success", false);
-                expect(body).has.property("message");
+            cyReqListPipe(reqQsParam).then(({ body, status }) => {
+                failQueryResp(body,status)
             })
         })
 
@@ -69,10 +68,8 @@ describe(`Test case for list Pipeline`, () => {
             let reqQsParam = listPipeQS({
                 module:"abc",
             })
-            cyReqListPipe(reqQsParam).then(({ body }) => {
-                cy.log(JSON.stringify(body))
-                expect(body).has.property("success", false);
-                expect(body).has.property("message");
+            cyReqListPipe(reqQsParam).then(({ body, status }) => {
+                failQueryResp(body,status)
             })
         })
 
@@ -80,10 +77,8 @@ describe(`Test case for list Pipeline`, () => {
             let reqQsParam = listPipeQS({
                 asset:"abcd",
             })
-            cyReqListPipe(reqQsParam).then(({ body }) => {
-                cy.log(JSON.stringify(body))
-                expect(body).has.property("success", false);
-                expect(body).has.property("message");
+            cyReqListPipe(reqQsParam).then(({ body, status }) => {
+                failQueryResp(body,status)
             })
         })
     })

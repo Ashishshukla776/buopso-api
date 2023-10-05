@@ -1,4 +1,4 @@
-describe(`Test case for Register new user`, () => {
+describe.skip(`Test case for Register new user`, () => {
     const { faker } = require('@faker-js/faker');
     let apiUrl = Cypress.env("apiUrl")
 

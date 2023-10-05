@@ -26,6 +26,6 @@ module.exports = defineConfig({
       userId: process.env.USERID,
       password: process.env.PASSWORD,
     },
-    specPattern: "cypress/buopso/AuthN"
+    specPattern: "cypress/buopso"
   },
 });

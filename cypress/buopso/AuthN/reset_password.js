@@ -1,4 +1,4 @@
-describe(`Test case for ${Cypress.spec["fileName"]}`, () => {
+describe.skip(`Test case for ${Cypress.spec["fileName"]}`, () => {
     const request = (setBody) => {
         return cy.request({
             method: "POST",

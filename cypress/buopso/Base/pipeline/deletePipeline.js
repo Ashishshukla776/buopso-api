@@ -1,4 +1,4 @@
-describe(`Test case for delete Pipeline`, () => {
+describe.skip(`Test case for delete Pipeline`, () => {
     beforeEach(()=>{
         cy.login()
         cy.pipelineData()

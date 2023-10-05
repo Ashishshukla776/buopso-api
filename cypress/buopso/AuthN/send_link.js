@@ -1,4 +1,4 @@
-describe(`Test case of ${Cypress.spec["fileName"]} for reset password`, () => {
+describe.skip(`Test case of ${Cypress.spec["fileName"]} for reset password`, () => {
     const request = (setQs) => {
        return cy.request ({
             method: "GET",

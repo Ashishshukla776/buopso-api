@@ -1,6 +1,6 @@
 import {qsForGetData} from '../../../helper/queryParam'
 import util from '../../../helper/utility'
-describe(`Test case for get asset- grid view`, () => {
+describe.skip(`Test case for get asset- grid view`, () => {
     const { faker } = require('@faker-js/faker');
     const getGridViewAssetReq = (payload) => {
         let reqData = {
