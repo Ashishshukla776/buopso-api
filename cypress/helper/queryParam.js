@@ -1,29 +1,28 @@
-// cy.pipelineData()
-export const qsWithoutCatId = () => {
+export const qsWithoutCatId = (payload) => {
     let qsData = {
-        module: payload.hasOwnProperty("module") ? payload.module : "one",
+        module: payload.hasOwnProperty("module") ? payload.module : "lms",
         asset: payload.hasOwnProperty("asset") ? payload.asset : "lead"
     };
     return qsData
 };
 
-export const qsWithCatId = () => {
+export const qsWithCatId = (dna) => {
     let qsData = {
-        module: payload.hasOwnProperty("module") ? payload.module : "one",
-        asset: payload.hasOwnProperty("asset") ? payload.asset : "lead",
-        catId: payload.hasOwnProperty("catId") ? payload.catId : Cypress.env("pipeline_id")
+        module: dna.hasOwnProperty("module") ? dna.module : "lms",
+        asset: dna.hasOwnProperty("asset") ? dna.asset : "lead",
+        catId: dna.hasOwnProperty("catId") ? dna.catId : ""
     };
     return qsData
 };
 
-export const qsForGetData = () => {
+export const qsForGetData = (rna) => {
     let qsData = {
-        module: payload.hasOwnProperty("module") ? payload.module : "one",
-        asset: payload.hasOwnProperty("asset") ? payload.asset : "lead",
-        catId: payload.hasOwnProperty("catId") ? payload.catId : Cypress.env("pipeline_id"),
-        page: payload.hasOwnProperty("page") ? payload.page : 1,
-        rows: payload.hasOwnProperty("rows") ? payload.rows : 25,
-        search: payload.hasOwnProperty("search") ? payload.search : "abc"
+        module: rna.hasOwnProperty("module") ? rna.module : "lms",
+        asset: rna.hasOwnProperty("asset") ? rna.asset : "lead",
+        catId: rna.hasOwnProperty("catId") ? rna.catId : Cypress.env("pipeline_id"),
+        page: rna.hasOwnProperty("page") ? rna.page : 1,
+        rows: rna.hasOwnProperty("rows") ? rna.rows : 25,
+        search: rna.hasOwnProperty("search") ? rna.search : "abc"
     };
     return qsData
 };

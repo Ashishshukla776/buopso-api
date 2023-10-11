@@ -321,7 +321,3 @@ Request - Query parameter -**search**
 ### actorName_test_step
 1. Pass the **actorName** as number/string/null data type 
 
-
-
-
- 

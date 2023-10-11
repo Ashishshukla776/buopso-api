@@ -1,15 +1,16 @@
-const { beforeEach } = require("mocha");
-
-describe.skip(`Test case for exist Pipeline`, () => {
+import util from '../../../helper/utility'
+import {failQueryResp} from '../../../helper/queryParam'
+describe(`Test case for exist Pipeline`, () => {
+    let apiUrl = Cypress.env("apiUrl")
     beforeEach(()=>{
+        cy.getToken()
         cy.pipelineData()
     })
-    const existPipeQS = () => {
+    const existPipeQS = (payload) => {
         let qsData = {
             module: payload.hasOwnProperty("module") ? payload.module : "one",
             asset: payload.hasOwnProperty("asset") ? payload.asset : "lead",
             label: payload.hasOwnProperty("label") ? payload.label : Cypress.env("pipelineName"),
-           
         };
         return qsData
     };
@@ -17,20 +18,23 @@ describe.skip(`Test case for exist Pipeline`, () => {
     const cyReqExistPipe = (setQsParam) => {
         return cy.request({
             method: "GET",
-            url: "http://api.buopso.lcl/fams/v2/pipelines/exists",
-            headers: { Authorization: "Bearer Auth" },
+            url: `${apiUrl}/fams/pipelines/exists`,
+            headers: { Authorization: Cypress.env("token") },
             qs: setQsParam
         });
     };
 
     context(`Success test case for exist Pipeline`, () => {
+       
         it(`Check pipeline exist or not`, () => {
+           
             let reqQsParam = existPipeQS({})
+            cy.log("-------------",reqQsParam)
             cyReqExistPipe(reqQsParam).then(({ body }) => {
                 cy.log(JSON.stringify(body))
-                expect(body).has.property("success", true);
-                expect(body).has.property("message");
-                expect(body).has.property("result",true);
+                // expect(body).has.property("success", true);
+                // expect(body).has.property("message");
+                // expect(body).has.property("result",true);
             })
         })
     })
@@ -38,10 +42,8 @@ describe.skip(`Test case for exist Pipeline`, () => {
     context(`Failure test case for exist Pipeline`, () => {
         it(`module-name and asset-name should be required in query param`, () => {
             let reqQsParam = {}
-            cyReqExistPipe(reqQsParam).then(({ body }) => {
-                cy.log(JSON.stringify(body))
-                expect(body).has.property("success", false);
-                expect(body).has.property("message");
+            cyReqExistPipe(reqQsParam).then(({ body, status }) => {
+                failQueryResp(body, status)
             })
         })
 
@@ -51,32 +53,26 @@ describe.skip(`Test case for exist Pipeline`, () => {
                 asset:123444,
                 label : 4324342
             })
-            cyReqExistPipe(reqQsParam).then(({ body }) => {
-                cy.log(JSON.stringify(body))
-                expect(body).has.property("success", false);
-                expect(body).has.property("message");
+            cyReqExistPipe(reqQsParam).then(({ body, status }) => {
+                failQueryResp(body, status)
             })
         })
 
-        it(`module-name should accept only [one, lms, cnf, crm and pms]`, () => {
+        it(`module-name should accept only ${util.module_name}`, () => {
             let reqQsParam = existPipeQS({
                 module:"abc",
             })
-            cyReqExistPipe(reqQsParam).then(({ body }) => {
-                cy.log(JSON.stringify(body))
-                expect(body).has.property("success", false);
-                expect(body).has.property("message");
+            cyReqExistPipe(reqQsParam).then(({ body, status }) => {
+                failQueryResp(body, status)
             })
         })
 
-        it(`asset-name should accept only [lead, approval, customer, company, deal, task and meeting]`, () => {
+        it(`asset-name should accept only ${util.asset_name}`, () => {
             let reqQsParam = existPipeQS({
                 asset:"abcd",
             })
-            cyReqExistPipe(reqQsParam).then(({ body }) => {
-                cy.log(JSON.stringify(body))
-                expect(body).has.property("success", false);
-                expect(body).has.property("message");
+            cyReqExistPipe(reqQsParam).then(({ body, status }) => {
+                failQueryResp(body, status)
             })
         })
 

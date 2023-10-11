@@ -1,6 +1,8 @@
 import {failQueryResp} from '../../../helper/queryParam'
+import util from '../../../helper/utility'
 
 describe(`Test case for list Pipeline`, () => {
+    let apiUrl = Cypress.env("apiUrl")
     beforeEach(()=>{
         cy.getToken()
     })
@@ -19,7 +21,7 @@ describe(`Test case for list Pipeline`, () => {
     const cyReqListPipe = (setQsParam) => {
         return cy.request({
             method: "GET",
-            url: "http://api.buopso.lcl/fams/pipelines",
+            url: `${apiUrl}/fams/pipelines`,
             headers: { Authorization: Cypress.env("token") },
             qs: setQsParam,
             failOnStatusCode: false
@@ -64,7 +66,7 @@ describe(`Test case for list Pipeline`, () => {
             })
         })
 
-        it(`module-name should accept only [one, lms, cnf, crm and pms]`, () => {
+        it(`module-name should accept only ${util.module_name}`, () => {
             let reqQsParam = listPipeQS({
                 module:"abc",
             })
@@ -73,7 +75,7 @@ describe(`Test case for list Pipeline`, () => {
             })
         })
 
-        it(`asset-name should accept only [lead, approval, customer, company, deal, task and meeting]`, () => {
+        it(`asset-name should accept only ${util.asset_name}`, () => {
             let reqQsParam = listPipeQS({
                 asset:"abcd",
             })
