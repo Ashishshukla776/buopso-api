@@ -22,7 +22,7 @@ export const qsForGetData = (rna) => {
         catId: rna.hasOwnProperty("catId") ? rna.catId : Cypress.env("pipeline_id"),
         page: rna.hasOwnProperty("page") ? rna.page : 1,
         rows: rna.hasOwnProperty("rows") ? rna.rows : 25,
-        search: rna.hasOwnProperty("search") ? rna.search : "abc"
+        // search: rna.hasOwnProperty("search") ? rna.search : "abc"
     };
     return qsData
 };
